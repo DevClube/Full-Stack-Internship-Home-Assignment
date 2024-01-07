@@ -1,7 +1,9 @@
 ## DNA Engineering Full-Stack Assignment
+
 Build a CSV Parser.
 
 ## Table of content
+
 - [Prerequisites](#prerequisites)
 - [Before We begin](#before-we-begin)
 - [Assignment](#assignment)
@@ -9,15 +11,18 @@ Build a CSV Parser.
 - [Bonus points](#bonus-points)
 
 ## Prerequisites
+
 - Java 17
 - Node Js v20.10.0
 
 ## Before we begin
+
 - In this assignment, you will be asked to write, and test your code.
 - Make sure you respect clean code guidelines.
 - Read the assignment carefully.
 
 ## Description
+
 You are invited to create a CSV parser using Java/Spring Boot, and build UI to display results using Next.js/React.
 
 ## Assignment
@@ -35,6 +40,7 @@ You are invited to create a CSV parser using Java/Spring Boot, and build UI to d
 ### Frontend
 
 #### Tasks
+
 Implement a simple user interface that will allow the user to upload the file and display the results of your processing.
 
 #### Interfaces
@@ -52,11 +58,38 @@ Respect the following design flow:
 **Table 2**: Jobs summary, displays for each job title, the average salary for employees.
 
 ## What we expect
+
 - Write a concise, easy to understand code.
 - Use good practices.
 - Write unit tests for your java code.
 - Append to this README your approach and provide instructions to run your project.
 
 ## Bonus points
+
 - Implement your own CSV file parser instead of using a library.
 - Use design patterns.
+
+#### Approach and Project Structure
+
+## Backend (Java/Spring Boot):
+
+**CSV Parser Implementation:**
+The CSV parser is implemented in the CsvParser class. It manually parses the CSV file and extracts employee data.
+**REST Endpoints:**
+REST endpoints are defined in the EmployeeController class to expose the processed data.
+
+![CSVController] (./Overview/CSVController_java.png)
+
+The extracted data is processed and stored in a suitable data structure in the 'CSVService'
+![CSVService] (./Overview/CSVService.png)
+
+## Fontend (NextJS / Tailwind):
+
+--- Home Page :
+![Home Page] (./Overview/home.png)
+
+--- Employee Table :
+![Employee Table] (./Overview/EmployeeTable.png)
+
+--- Jobs Summary :
+![Jobs Summary ] (./Overview/JobSummary.png)

@@ -1,4 +1,4 @@
-package ma.dnaengineering.backend.csvParser;
+package ma.dnaengineering.backend.model;
 
 
 import jakarta.persistence.Column;
@@ -12,7 +12,7 @@ public class Employee {
 
     @Id
     @Column(name = "id")
-    private int id;
+    private long id;
 
     @Column(name = "employee_name")
     private String name;
@@ -23,13 +23,27 @@ public class Employee {
     @Column(name = "salary")
     private double salary;
 
-    public Employee(String name, String jobTitle, double salary) {
+    public Employee() {
+    }
+
+    public Employee(long id, String name, String jobTitle, double salary) {
+        this.id = id;
         this.name = name;
         this.jobTitle = jobTitle;
         this.salary = salary;
     }
 
     // Getters and setters
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,7 +1,10 @@
-package ma.dnaengineering.backend.csvParser;
+package ma.dnaengineering.backend.repository;
 
+import ma.dnaengineering.backend.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface  employeeRepository extends JpaRepository {
+public interface  EmployeeRepository extends JpaRepository<Employee, Long> {
+
+
 }

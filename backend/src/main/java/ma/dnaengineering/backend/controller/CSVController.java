@@ -1,31 +1,26 @@
-package ma.dnaengineering.backend.csvParser;
-
+package ma.dnaengineering.backend.controller;
 
 import java.util.List;
 
+import ma.dnaengineering.backend.helper.CSVHelper;
+import ma.dnaengineering.backend.message.ResponseMessage;
+import ma.dnaengineering.backend.model.Employee;
+import ma.dnaengineering.backend.service.CSVService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bezkoder.spring.files.csv.service.CSVService;
-import com.bezkoder.spring.files.csv.helper.CSVHelper;
-import com.bezkoder.spring.files.csv.message.ResponseMessage;
-import com.bezkoder.spring.files.csv.model.Tutorial;
-
-@CrossOrigin("http://localhost:3000")
-@Controller
-@RequestMapping("/api/csv")
+@CrossOrigin("*")
+@RestController
+@RequestMapping("/api/csv/")
 public class CSVController {
 
     @Autowired
@@ -42,7 +37,7 @@ public class CSVController {
                 message = "Uploaded the file successfully: " + file.getOriginalFilename();
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             } catch (Exception e) {
-                message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+                message = "Could not upload the file: " + file.getOriginalFilename() + "!" + e;
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
             }
         }
@@ -52,19 +47,18 @@ public class CSVController {
     }
 
     @GetMapping("/Employees")
-    public ResponseEntity<List<Tutorial>> getAllTutorials() {
+    public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
-            List<Tutorial> tutorials = fileService.getAllTutorials();
+            List<Employee> employees = fileService.getAllEmployees();
 
-            if (tutorials.isEmpty()) {
+            if (employees.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(tutorials, HttpStatus.OK);
+            return new ResponseEntity<>(employees, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }
