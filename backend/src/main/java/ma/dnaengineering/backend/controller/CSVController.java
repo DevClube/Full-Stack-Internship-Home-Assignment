@@ -47,7 +47,7 @@ public class CSVController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @GetMapping("/employees")
+    @GetMapping("/Employees")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
             List<Employee> employees = fileService.getAllEmployees();

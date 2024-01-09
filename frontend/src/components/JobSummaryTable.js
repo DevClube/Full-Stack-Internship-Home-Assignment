@@ -10,12 +10,10 @@ const JobSummaryTable = ({ jobSummary }) => {
         </tr>
       </thead>
       <tbody>
-        {Object.keys(jobSummary).map((jobTitle) => (
-          <tr key={jobTitle} className="bg-white border-b ">
+        {Object.entries(jobSummary).map(([jobTitle, averageSalary]) => (
+          <tr key={jobTitle} className="bg-white border-b">
             <td className="p-2">{jobTitle}</td>
-            <td className="p-2">
-              {jobSummary[jobTitle].averageSalary.toFixed(2)}
-            </td>
+            <td className="p-2">{averageSalary.toFixed(2)}</td>
           </tr>
         ))}
       </tbody>

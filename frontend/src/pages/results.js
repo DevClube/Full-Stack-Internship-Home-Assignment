@@ -2,90 +2,23 @@ import React from "react";
 import EmployeeTable from "../components/EmployeeTable";
 import ErrorComponent from "../components/ErrorComponent";
 import { useState, useEffect } from "react";
-import Employee from "../Employee";
-import axios from "axios";
 import JobSummaryTable from "@/components/JobSummaryTable";
+
+import { fetchEmployee } from "@/service/fetchEmployees";
+import { fetchJobSummary } from "@/service/ferchJobSummary";
 const ResultsPage = () => {
   const [employees, setEmployees] = useState([]);
+  const [jobSummary, setJobSummary] = useState({});
   const [error, setError] = useState(null);
 
-  // Display the CSV file data as a Table
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/api/csv/Employees"
-        );
-        setEmployees(
-          response.data.map((employeeData) => {
-            // Assuming Employee class has properties matching the API response
-            return new Employee(
-              employeeData.id,
-              employeeData.name,
-              employeeData.jobTitle,
-              employeeData.salary
-            );
-          })
-        );
-      } catch (error) {
-        console.error("Error fetching employee data:", error);
-        setError("Error fetching employee data. Please try again.");
-      }
-    };
-
-    fetchData();
+    fetchEmployee(setEmployees, setError);
   }, []);
 
-  // Calculate job summary with average salary
-  const calculateJobSummary = () => {
-    const jobSummary = {};
+  useEffect(() => {
+    fetchJobSummary(setJobSummary, setError);
+  }, []);
 
-    employees.forEach((employee) => {
-      if (jobSummary[employee.jobTitle]) {
-        jobSummary[employee.jobTitle].totalSalary += employee.salary;
-        jobSummary[employee.jobTitle].count += 1;
-      } else {
-        jobSummary[employee.jobTitle] = {
-          totalSalary: employee.salary,
-          count: 1,
-        };
-      }
-    });
-    useEffect(() => {
-      const fetchJobSummary = async () => {
-        try {
-          const response = await axios.get(
-            "http://localhost:8080/api/csv/averagesalary"
-          );
-          setEmployees(
-            response.data.map((employeeData) => {
-              // Assuming Employee class has properties matching the API response
-              return new Employee(
-                employeeData.id,
-                employeeData.name,
-                employeeData.jobTitle,
-                employeeData.salary
-              );
-            })
-          );
-        } catch (error) {
-          console.error("Error fetching employee data:", error);
-          setError("Error fetching employee data. Please try again.");
-        }
-      };
-
-      fetchJobSummary();
-    }, []);
-    // Calculate average salary
-    for (const jobTitle in jobSummary) {
-      jobSummary[jobTitle].averageSalary =
-        jobSummary[jobTitle].totalSalary / jobSummary[jobTitle].count;
-    }
-
-    return jobSummary;
-  };
-
-  const jobSummary = calculateJobSummary();
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <h1 className="text-green-400 text-3xl">Results</h1>
