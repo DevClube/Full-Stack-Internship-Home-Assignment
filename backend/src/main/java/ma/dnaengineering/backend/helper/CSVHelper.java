@@ -20,10 +20,8 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.QuoteMode;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 public class CSVHelper {
-    public static String TYPE = "text/csv";
+    public static String TYPE = "text/csv ";
     static String[] HEADERs = { "id", "employee_name", "job_title", "salary" };
 
     public static boolean hasCSVFormat(MultipartFile file) {
@@ -37,8 +35,8 @@ public class CSVHelper {
 
     public static List<Employee> csvToEmployees(InputStream is) {
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-             CSVParser csvParser = new CSVParser(fileReader,
-                     CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
+                CSVParser csvParser = new CSVParser(fileReader,
+                        CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());) {
 
             List<Employee> employees = new ArrayList<Employee>();
 
@@ -49,8 +47,7 @@ public class CSVHelper {
                         Long.parseLong(csvRecord.get("id")),
                         csvRecord.get("employee_name"),
                         csvRecord.get("job_title"),
-                        Double.parseDouble(csvRecord.get("salary"))
-                );
+                        Double.parseDouble(csvRecord.get("salary")));
 
                 employees.add(employee);
             }
@@ -65,14 +62,13 @@ public class CSVHelper {
         final CSVFormat format = CSVFormat.DEFAULT.withQuoteMode(QuoteMode.MINIMAL);
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-             CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
+                CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
             for (Employee employee : employees) {
                 List<String> data = Arrays.asList(
                         String.valueOf(employee.getId()),
                         employee.getName(),
                         employee.getJobTitle(),
-                        String.valueOf(employee.getSalary())
-                );
+                        String.valueOf(employee.getSalary()));
 
                 csvPrinter.printRecord(data);
             }
