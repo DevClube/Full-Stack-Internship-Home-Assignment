@@ -1,6 +1,7 @@
 package ma.dnaengineering.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import ma.dnaengineering.backend.helper.CSVHelper;
 import ma.dnaengineering.backend.message.ResponseMessage;
@@ -24,13 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class CSVController {
 
     @Autowired
-    CSVService fileService;
+    private CSVService fileService;
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
 
-        if (CSVHelper.hasCSVFormat(file)) {
+        if (CSVHelper.hasCSVFormat(file.getContentType())) {
             try {
                 fileService.save(file);
 
@@ -42,11 +43,11 @@ public class CSVController {
             }
         }
 
-        message = "Please upload a csv file!";
+        message = "Please upload a CSV file!";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @GetMapping("/Employees")
+    @GetMapping("/employees")
     public ResponseEntity<List<Employee>> getAllEmployees() {
         try {
             List<Employee> employees = fileService.getAllEmployees();
@@ -61,4 +62,18 @@ public class CSVController {
         }
     }
 
+    @GetMapping("/averagesalary")
+    public ResponseEntity<Map<String, Double>> getAverageSalaryByJob() {
+        try {
+            Map<String, Double> averageSalaries = fileService.calculateAverageSalaryByJob();
+
+            if (averageSalaries.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(averageSalaries, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

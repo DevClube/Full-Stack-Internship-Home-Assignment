@@ -51,6 +51,31 @@ const ResultsPage = () => {
         };
       }
     });
+    useEffect(() => {
+      const fetchJobSummary = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8080/api/csv/averagesalary"
+          );
+          setEmployees(
+            response.data.map((employeeData) => {
+              // Assuming Employee class has properties matching the API response
+              return new Employee(
+                employeeData.id,
+                employeeData.name,
+                employeeData.jobTitle,
+                employeeData.salary
+              );
+            })
+          );
+        } catch (error) {
+          console.error("Error fetching employee data:", error);
+          setError("Error fetching employee data. Please try again.");
+        }
+      };
+
+      fetchJobSummary();
+    }, []);
     // Calculate average salary
     for (const jobTitle in jobSummary) {
       jobSummary[jobTitle].averageSalary =
