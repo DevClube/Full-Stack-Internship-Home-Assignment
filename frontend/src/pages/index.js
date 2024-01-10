@@ -1,84 +1,46 @@
-import { Inter } from 'next/font/google'
-import React, {
-  useState
-} from 'react';
-import FileUpload from './FileUpload';
-const inter = Inter({ subsets: ['latin'] })
+import { Inter } from "next/font/google";
+import { useRouter } from "next/router";
+const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-    const [employees, setEmployees] = useState([]);
-    const [jobSummary, setJobSummary] = useState([]);
+import { useState } from "react";
+import axios from "axios";
+import UploadForm from "@/components/UploadForm";
+import ProcessButton from "@/components/ProcessButton";
+import ErrorComponent from "@/components/ErrorComponent";
+import ResultsPage from "./results";
+const Index = () => {
+  const [file, setFile] = useState(null);
+  const router = useRouter();
+  const onFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-    const handleFileUpload = async (file) => {
-      const formData = new FormData();
-      formData.append('file', file);
+  const onUpload = () => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-      try {
-        const response = await fetch('http://localhost:8080/api/employees/upload', {
-          method: 'POST',
-          body: formData,
-        });
+    axios
+      .post("http://localhost:8080/api/csv/upload", formData)
+      .then((response) => {
+        // Handle success, e.g., update state with response data
+        console.log("uploaded successufully");
+        router.push("/results");
+      })
+      .catch((error) => {
+        // Handle error
+        <ErrorComponent message={error}></ErrorComponent>;
+      });
+  };
 
-        if (response.ok) {
-          const data = await response.json();
-          setEmployees(data.employees);
-          setJobSummary(data.jobSummary);
-        } else {
-          console.error('File upload failed');
-        }
-      } catch (error) {
-        console.error('Error during file upload', error);
-      }
-    };
   return (
-     <div>
-            <h1>CSV Parser and UI</h1>
-            <FileUpload onFileUpload={handleFileUpload} />
+    <main
+      className={`flex min-h-screen flex-col items-center p-24 ${inter.className}`}
+    >
+      DNA Engineering Full-Stack Internship Home Assignment
+      <UploadForm onFileChange={onFileChange}></UploadForm>
+      <ProcessButton onClick={onUpload}></ProcessButton>
+    </main>
+  );
+};
 
-            {/* Table 1: Employee information */}
-            <h2>Employee Information</h2>
-            <table>
-                {/* Display paginated list of employees */}
-                {/* Use a pagination library or implement your own logic */}
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Job Title</th>
-                        <th>Salary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {employees.map((employee) => (
-                        <tr key={employee.id}>
-                            <td>{employee.id}</td>
-                            <td>{employee.employeeName}</td>
-                            <td>{employee.jobTitle}</td>
-                            <td>{employee.salary}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* Table 2: Jobs summary */}
-            <h2>Jobs Summary</h2>
-            <table>
-                {/* Display average salary for each job title */}
-                <thead>
-                    <tr>
-                        <th>Job Title</th>
-                        <th>Average Salary</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {jobSummary.map((summary) => (
-                        <tr key={summary.jobTitle}>
-                            <td>{summary.jobTitle}</td>
-                            <td>{summary.averageSalary}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-  )
-}
+export default Index;
